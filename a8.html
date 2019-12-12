@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>动态创建表格</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="a.js"></script>
+</head>
+<body>
+    <div style="width: 100%;background-color: #ccc;">
+    <div id="top">
+        <span><img src="a15.png" style="padding-left:150px;padding-top: 1px;"></span>
+        <div id="toop">
+            <span id="aaa">[温馨提示]最近有不少不法分子在网上骗人，请大家注意！！！</span>
+        </div>
+    </div>
+    </div>
+    <div class="box" id="box">
+        <div class="slider" id="slider">
+            <div class="slide"><img src="b5.png"></div>
+            <div class="slide"><img src="b1.png"></div>
+            <div class="slide"><img src="b2.png"></div>
+            <div class="slide"><img src="b3.png"></div>
+            <div class="slide"><img src="b4.png"></div>
+            <div class="slide"><img src="b5.png"></div>
+            <div class="slide"><img src="b1.png"></div>
+        </div>
+        <span id="left"> &lt;</span>
+        <span id="right"> &gt;</span>
+        <ul class="nav" id="nav">
+            <li class="active">
+                <span style="padding: 5px;">1</span>
+            </li>
+            <li>
+                <span style="padding: 5px;">2</span>
+            </li>
+            <li>
+                <span style="padding: 5px;">3</span>
+            </li>
+            <li><span style="padding: 5px;">4</span></li>
+            <li><span style="padding: 5px;">5</span></li>
+        </ul>
+    </div>
+</body>
+<script>
+    var box=document.getElementById("box");
+    var navchild=document.getElementById("nav").children;
+    var slider=document.getElementById("slider");
+    var left=document.getElementById("left");
+    var right=document.getElementById("right");
+    var top=document.getElementById("top");
+    var toop=document.getElementById("toop");
+    var index=1;
+    var timer;
+    var isMoving=false;
+    var is=0;
+    var im=0;
+    var aaa=document.getElementById("aaa");
+    // function aaa(){
+    //     im+=10;
+    //     is++;
+    //     animate(toop,{right:150+im},function(){ 
+    //         if(is===3){
+    //             im=0;
+    //             toop.style.right="150px";
+    //         }
+    //     });
+    // }
+    //var time=setInterval(aaa,100);
+
+    function asa(){
+        var now=parseInt(getStyle(aaa,"margin-left"));
+        if(now==-450){
+            // clearInterval(time);
+            aaa.style.marginLeft=800+"px";
+        }else{
+            aaa.style.marginLeft=now-1+"px";
+        }
+    }
+    var time=setInterval(asa,15);
+    //1.不能通过点击实现
+    //2.如何使得循环出现
+    // aaa.onclick=function(){
+    // // function aaa(){
+    //     var time=setInterval(function(){
+    //         var now=parseInt(getStyle(aaa,"margin-left"));
+    //         if(now==-450){
+    //             clearInterval(time);
+    //         }else{
+    //             aaa.style.marginLeft=now-10+"px";
+    //         };
+           
+    //     },30);
+    // }
+    function getStyle(obj,attr){
+        if(obj.currentStyle){
+            return obj.currentStyle[attr];
+        }else{
+            return getComputedStyle(obj,null)[attr];
+        }
+    }
+    function next(){
+        if(isMoving){
+            return;
+        }
+        isMoving=true;
+        index++;
+        navChange();
+        animate(slider,{left:-1200*index},function(){
+            if(index===6){
+                slider.style.left="-1200px";//1200
+                index=1;
+            }
+            isMoving=false;
+        });
+    }
+    var timer=setInterval(next,3000);
+    function prev(){
+        if(isMoving){
+            return;
+        }
+        isMoving=true;
+        index--;
+        navChange();
+        animate(slider,{left:-1200*index},function(){
+            if(index==0){
+                slider.style.left="-6000px";//6000
+                index=5;
+            }
+            isMoving=false;
+        });
+    }
+    box.onmouseover=function(){
+        animate(left,{opacity:50});
+        animate(right,{opacity:50});
+        clearInterval(timer);
+    }
+    box.onmouseout=function(){
+        animate(left,{opacity:0});
+        animate(right,{opacity:0});
+        timer=setInterval(next,3000);
+    }
+    //?
+    
+    right.setAttribute("onclick","next()");
+    left.setAttribute("onclick","prev()");
+    for(var i=0;i<navchild.length;i++){
+        navchild[i].idx=i;
+        navchild[i].onclick=function(){
+            index=this.idx+1;
+            navChange();
+            animate(slider,{left:-1200*index}); 
+        }
+    }
+    function navChange(){
+        for(var i = 0;i<navchild.length;i++){
+            navchild[i].className="";
+        }
+        if(index===6){
+            navchild[0].className="active";
+        }
+        else if(index===0){
+            navchild[4].className="active";
+        }
+        else{
+            navchild[index-1].className="active";
+        }
+    }
+</script>
+</html>
